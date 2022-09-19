@@ -31,28 +31,55 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default'
 
+  const VARIANT_STYLES = {
+    'on-sale': {
+      '--backgroundColor': '#C5295D',
+      '--textDecoration': 'line-through'
+    },
+    'new-release': {
+      '--backgroundColor': '#6868D9' 
+    }
+  }
+
+  const styles = VARIANT_STYLES[variant];
+
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          <SaleStatus style={styles} variant={variant}>{variant === 'on-sale' ? "Sale" : variant === 'new-release' ? 'New Release!' : ''}</SaleStatus>
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price style={styles}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          <SalePrice>{salePrice ? formatPrice(salePrice) : ''}</SalePrice>
         </Row>
       </Wrapper>
     </Link>
   );
 };
 
+const SaleStatus = styled.div`
+  position: absolute;
+  top: 12px;
+  right: -5px;
+  background-color: var(--backgroundColor);
+  padding: 9px;
+  font-size: 14px;
+  border-radius: 2px;
+  font-family: 'Raleway';
+  color: white;
+`;
+
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
+  flex: 1 0 340px;
 `;
 
 const Wrapper = styled.article``;
@@ -61,10 +88,15 @@ const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  width: 100%;
+  border-radius: 16px 16px 4px 4px;
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -72,7 +104,9 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  text-decoration: var(--textDecoration);
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
