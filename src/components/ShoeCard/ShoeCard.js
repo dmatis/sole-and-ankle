@@ -34,7 +34,8 @@ const ShoeCard = ({
   const VARIANT_STYLES = {
     'on-sale': {
       '--backgroundColor': '#C5295D',
-      '--textDecoration': 'line-through'
+      '--textDecoration': 'line-through',
+      '--color': COLORS.gray[700]
     },
     'new-release': {
       '--backgroundColor': '#6868D9' 
@@ -48,7 +49,8 @@ const ShoeCard = ({
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
-          <SaleStatus style={styles} variant={variant}>{variant === 'on-sale' ? "Sale" : variant === 'new-release' ? 'New Release!' : ''}</SaleStatus>
+          {variant === 'on-sale' && <SaleFlag style={styles}>Sale</SaleFlag>}
+          {variant === 'new-release' && <NewReleaseFlag style={styles}>New Release!</NewReleaseFlag>}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
@@ -57,29 +59,35 @@ const ShoeCard = ({
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
-          <SalePrice>{salePrice ? formatPrice(salePrice) : ''}</SalePrice>
+          {variant === 'on-sale' ? <SalePrice>{formatPrice(salePrice)}</SalePrice> : undefined}
         </Row>
       </Wrapper>
     </Link>
   );
 };
 
-const SaleStatus = styled.div`
+const Flag = styled.div`
   position: absolute;
   top: 12px;
   right: -5px;
   background-color: var(--backgroundColor);
   padding: 9px;
-  font-size: 14px;
   border-radius: 2px;
+  font-weight: ${WEIGHTS.bold};
   font-family: 'Raleway';
-  color: white;
+  color: ${COLORS.white};
+`;
+
+const SaleFlag = styled(Flag)`
+  background-color: ${COLORS.primary};
+`;
+const NewReleaseFlag = styled(Flag)`
+  background-color: ${COLORS.secondary};
 `;
 
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
-  flex: 1 0 340px;
 `;
 
 const Wrapper = styled.article``;
@@ -106,6 +114,7 @@ const Name = styled.h3`
 
 const Price = styled.span`
   text-decoration: var(--textDecoration);
+  color: var(--color);
 `;
 
 const ColorInfo = styled.p`
